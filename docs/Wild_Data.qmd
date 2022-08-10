@@ -78,7 +78,16 @@ mc_trout_plot <- ggplot(data = mc_trout, aes(x = length1, y = weight))+
        title = "Comparing Trout Length x Weight",
        subtitle = "for cutthroat trout",
        caption = "Comparing the length and weight for the cutthroat trout")+
-  scale_color_manual(values =c("green", M = "purple", U = "orange"))
+  scale_color_manual(values = c("green", M = "purple", U = "orange"))+
+  facet_wrap(~reach)
 
 mc_trout_plot
+```
+
+Export your graph to figs folder
+
+```{r}
+ggsave(plot = mc_trout_plot, here::here("figs", "mc_trout_plot.png"),
+       width = 6,
+       height = 5)
 ```
