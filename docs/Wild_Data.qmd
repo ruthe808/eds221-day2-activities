@@ -1,0 +1,84 @@
+---
+title: "Wild Data"
+format: html
+editor: visual
+execute: 
+  warning: false
+  message: false
+---
+
+```{r}
+library(tidyverse)
+library(here)
+library(janitor)
+```
+
+```{r}
+mack_verts <- read_csv(here::here("data", "AS00601.csv"))
+
+mack_verts_c <- clean_names(mack_verts)
+```
+
+```{r}
+mc_wt_5 <- mack_verts_c$weight[5]
+mc_length_8_20 <- mack_verts_c$length1[8:20]
+```
+
+```{r}
+#Store everything in column SAMPLEDATE as a vector called mc_dates
+
+mc_dates <- c(mack_verts_c$sampledate)
+```
+
+Make a salamander subset
+
+```{r}
+#Create a subset that only contains observations for Pacific Giant Salamanders
+mc_salamanders <- mack_verts_c %>% dplyr::filter(species == "DITE")
+```
+
+Make a scatterplot of salamander length x weight
+
+```{r}
+mc_salamander_plot <- ggplot(data = mc_salamanders, aes(x = length1, y = weight))+
+  geom_point(color = "blue",
+             size = 2,
+             alpha = 0.5)+
+  theme_minimal()+
+  labs(x = "Length (mm)",
+       y = "Weight (g)",
+       title = "Comparing Salamander Length x Weight",
+       subtitle = "for the Dicamptodon tenebrosus",
+       caption = "Comparing the length and weight for the dicamptodon tenebrosus salamandar")
+```
+
+```{r}
+ggsave(plot = mc_salamander_plot, here::here("figs", "mc_salamanders_plot.png"),
+       width = 6,
+       height = 5)
+```
+
+Make a cutthroat plot
+
+```{r}
+#Create a subset that only contains observations for Pacific Giant Salamanders
+mc_trout <- mack_verts_c %>% dplyr::filter(species == "ONCL")
+```
+
+Make a scatterplot for cutthroat
+
+```{r}
+mc_trout_plot <- ggplot(data = mc_trout, aes(x = length1, y = weight))+
+  geom_point(aes(color= reach),
+             size = 2,
+             alpha = 0.5)+
+  theme_minimal()+
+  labs(x = "Length (mm)",
+       y = "Weight (g)",
+       title = "Comparing Trout Length x Weight",
+       subtitle = "for cutthroat trout",
+       caption = "Comparing the length and weight for the cutthroat trout")+
+  scale_color_manual(values =c("green", M = "purple", U = "orange"))
+
+mc_trout_plot
+```
